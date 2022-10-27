@@ -121,7 +121,6 @@ function UserContextProvider(props){
     function getUserTopics(){
         voterAxios.get("/api/topics/voter")
             .then(res => 
-                // console.log(res.data))
                 setUserState(prevUserState => ({
                 ...prevUserState,
                 topics: res.data
@@ -154,7 +153,7 @@ function UserContextProvider(props){
 
     function voting(topicId, update){
         voterAxios.put(`/api/topics/${topicId}`, update)
-            .then(res => console.log(res.data))
+            .then(res => res.data)
             .catch(err => console.log(err))
     }
 

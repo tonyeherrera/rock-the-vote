@@ -10,9 +10,6 @@ function TopicDetails(){
     const {topicId} = useParams()
     const {comments, topicDetails, setTopicDetails, getComments, getDetails, voting, voter:{username}} = useContext(UserContext)
     const {title, description, upvotes, downvotes, author} = topicDetails
-    
-
-    console.log(topicId)
 
     useEffect(() => {
         getDetails(topicId)
@@ -24,15 +21,15 @@ function TopicDetails(){
 
     function vote(e){
         const {id} = e.target
-        const updatedUpvotes = topicDetails.upvotes.filter(alreadyVoted)
-        const updatedDownvotes = topicDetails.downvotes.filter(alreadyVoted)
+        const updatedUpvotes = topicDetails.upvotes.filter(voter => voter !== username)
+        const updatedDownvotes = topicDetails.downvotes.filter(voter => voter !== username)
         id ===  "upvotes" ?
         downvotes.some(voter => voter === username) ?
         !upvotes.some(voter => voter === username) &&
         setTopicDetails(prevDetails => ({
             ...prevDetails,
             upvotes:[...prevDetails.upvotes, username],
-            downvotes:[updatedDownvotes]  
+            downvotes:updatedDownvotes 
         }))
         :
         !upvotes.some(voter => voter === username) &&
@@ -47,7 +44,7 @@ function TopicDetails(){
         setTopicDetails(prevDetails => ({
             ...prevDetails,
             downvotes:[...prevDetails.downvotes, username], 
-            upvotes:[updatedUpvotes]
+            upvotes:updatedUpvotes
         })) 
         :
         !downvotes.some(voter => voter === username) &&
@@ -55,10 +52,6 @@ function TopicDetails(){
             ...prevDetails,
             downvotes:[...prevDetails.downvotes, username] 
         })) 
-    }
-
-    function alreadyVoted(){
-        return username !== username
     }
 
     useEffect(()=>{
@@ -81,8 +74,9 @@ function TopicDetails(){
                     <CommentForm  topicId={topicId}/>
                     {comments.filter(comment => comment.topic === topicId).map(comment =>  {
                             return( <div key={comment._id}>
-                                    <p>{comment.author}</p>
+                                    <p style={{fontStyle:"italic"}}>{comment.author}:</p>
                                     <p>{comment.comment}</p>
+                                    <hr></hr>
                                 </div>
                                 )
                     })}
