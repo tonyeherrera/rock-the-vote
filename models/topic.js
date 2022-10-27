@@ -10,14 +10,12 @@ const topicSchema = new Schema({
         type: String,
         required: true,
     },
-    upvotes:{
-        type: Number,
-        default: 0
-    },
-    downvotes:{
-        type: Number,
-        default: 0
-    },
+    upvotes:[{
+            type:String
+    }],
+    downvotes:[{
+            type:String
+    }],
     voter:{
         type: Schema.Types.ObjectId,
         ref:"Voter",

@@ -1,12 +1,11 @@
 const express = require('express')
-const comments = require('../models/comments.js')
 const commentsRouter = express.Router()
 const Comment = require('../models/comments.js')
-const topic = require('../models/topic')
+
 
 //get comments
-commentsRouter.get('/:topicId/', (req, res, next) => {
-    Comment.find({topicId: req.params.topicId}, (err, comments) => {
+commentsRouter.get('/', (req, res, next) => {
+    Comment.find((err, comments) => {
         if(err){
             res.status(500)
             return next(err)
@@ -16,11 +15,11 @@ commentsRouter.get('/:topicId/', (req, res, next) => {
 })
 
 //post comment
-commentsRouter.post('/:topicId/', (req, res, next) => {
+commentsRouter.post('/:topicId', (req, res, next) => {
     req.body.topic = req.params.topicId
     req.body.voter = req.auth._id
     req.body.author = req.auth.username
-    const newComment = new comments(req.body)
+    const newComment = new Comment(req.body)
     newComment.save((err, savedComment) =>
         {
         if(err){
@@ -47,7 +46,7 @@ commentsRouter.delete('/:topicId/:commentId', (req, res, next) =>{
 
 //edit comment
 commentsRouter.put('/:topicsId/:commentId', (req, res, next) => {
-    topic.findOneAndUpdate(
+    Comment.findOneAndUpdate(
         {_id: req.params.commentId, voter: req.auth._id},
         req.body,
         {new: true},

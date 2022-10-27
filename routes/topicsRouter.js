@@ -1,4 +1,5 @@
 const express = require('express')
+const topic = require('../models/topic.js')
 const topicsRouter = express.Router()
 const Topic = require('../models/topic.js')
 
@@ -20,6 +21,19 @@ topicsRouter.get('/voter', (req, res, next) => {
             return next(err)
         }
         return res.status(200).send(topics)
+    })
+})
+
+//get one topic by topic id
+topicsRouter.get('/:topicId', (req, res, next) => {
+    Topic.findOne(
+        {_id: req.params.topicId},
+        (err, topicDetails) => {
+            if(err){
+                res.status(500)
+                return next(err)
+            }
+            return res.status(200).send(topicDetails)
     })
 })
 
@@ -55,7 +69,7 @@ topicsRouter.delete('/:topicId', (req, res, next) => {
 //edit 
 topicsRouter.put('/:topicId', (req, res, next) => {
     Topic.findOneAndUpdate(
-        {_id: req.params.topicId, voter: req.auth._id},
+        {_id: req.params.topicId},
         req.body,
         {new: true},
         (err, updatedTopic) => {
